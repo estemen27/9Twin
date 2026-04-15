@@ -20,10 +20,12 @@
 
   function colorByCongestion(c) {
     const v = Math.min(1, Math.max(0, c));
-    if (v < 0.4) return mixColor("#57C785", "#8CD9A8", v / 0.4);
-    if (v < 0.7) return mixColor("#8CD9A8", "#D8B562", (v - 0.4) / 0.3);
-    if (v < 0.9) return mixColor("#D8B562", "#6EA8D8", (v - 0.7) / 0.2);
-    return mixColor("#6EA8D8", "#D46868", (v - 0.9) / 0.1);
+    // Palette: Teal -> Green -> Yellow -> Orange -> Red
+    if (v < 0.2) return mixColor("#14B8A6", "#2DD4BF", v / 0.2);
+    if (v < 0.4) return mixColor("#2DD4BF", "#A3E635", (v - 0.2) / 0.2);
+    if (v < 0.6) return mixColor("#A3E635", "#FACC15", (v - 0.4) / 0.2);
+    if (v < 0.8) return mixColor("#FACC15", "#FB923C", (v - 0.6) / 0.2);
+    return mixColor("#FB923C", "#F87171", (v - 0.8) / 0.2);
   }
 
   function createSvgEl(tag, attrs) {
@@ -105,12 +107,12 @@
       opacity: 0.28,
     });
 
-    const roadsCase = createSvgEl("g", { id: "twin-roads-case", stroke: "#2a3550", "stroke-width": 4.4, fill: "none", opacity: 0.78 });
+    const roadsCase = createSvgEl("g", { id: "twin-roads-case", stroke: "#2a3550", "stroke-width": 5.0, fill: "none", opacity: 0.6 });
     data.calles.forEach(function (pathDef) {
       roadsCase.appendChild(createSvgEl("path", { d: pathDef }));
     });
 
-    const roads = createSvgEl("g", { id: "twin-roads", stroke: "#556079", "stroke-width": 2.2, fill: "none", opacity: 0.72 });
+    const roads = createSvgEl("g", { id: "twin-roads", stroke: "#556079", "stroke-width": 2.5, fill: "none", opacity: 0.6 });
     data.calles.forEach(function (pathDef) {
       roads.appendChild(createSvgEl("path", { d: pathDef }));
     });
@@ -346,12 +348,12 @@
         if (!el) return;
         const v = Math.min(1, Math.max(0, value));
         el.setAttribute("stroke", colorByCongestion(v));
-        el.setAttribute("stroke-width", String((ref?.baseCritical ? 4.8 : 3.5) + v * 1.6));
-        el.style.opacity = String(0.5 + v * 0.35);
+        el.setAttribute("stroke-width", String((ref?.baseCritical ? 5.0 : 3.8) + v * 2.0));
+        el.style.opacity = String(0.6 + v * 0.4);
         if (flow) {
-          flow.style.animationDuration = (0.9 + Math.max(0.2, (1 - v)) * 1.3).toFixed(2) + "s";
-          flow.style.opacity = String(0.24 + Math.min(0.42, v * 0.48));
-          flow.style.strokeWidth = String(1 + v * 0.95);
+          flow.style.animationDuration = (1.5 + Math.max(0.2, (1 - v)) * 2.0).toFixed(2) + "s";
+          flow.style.opacity = String(0.4 + Math.min(0.5, v * 0.6));
+          flow.style.strokeWidth = String(1.4 + v * 1.1);
         }
       },
       getScale: function getScale() { return scale; },

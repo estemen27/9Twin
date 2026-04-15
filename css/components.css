@@ -435,15 +435,16 @@ tr.clickable:hover {
 }
 
 .seg-line:hover {
-  stroke-width: 7;
-  opacity: 0.95;
+  stroke-width: 8;
+  opacity: 1;
 }
 
 .flow-line {
-  opacity: 0.72;
+  opacity: 0.8;
   animation-name: flowMove;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  stroke-linecap: round;
 }
 
 @keyframes flowMove {
@@ -451,16 +452,17 @@ tr.clickable:hover {
     stroke-dashoffset: 0;
   }
   to {
-    stroke-dashoffset: -72;
+    stroke-dashoffset: -48;
   }
 }
 
 .map-node {
-  transition: transform 180ms ease, r 180ms ease;
+  transition: transform 180ms ease, r 180ms ease, fill 180ms ease;
 }
 
 .map-node:hover {
-  transform: scale(1.35);
+  transform: scale(1.5);
+  fill: #fff;
 }
 
 .map-node.invalid {
