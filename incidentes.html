@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Incidentes</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <div id="activos-banner"></div>
+      <section class="card" style="margin-top:12px">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <h3>Registro de incidentes</h3>
+          <div style="display:flex; gap:8px; align-items:center">
+            <input id="buscar-incidentes" placeholder="Buscar incidente por ID, ubicación o estado" style="max-width:320px" />
+            <button id="btn-registrar" class="btn btn-primary">Registrar incidente</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="tabla-incidentes">
+            <thead>
+              <tr>
+                <th data-sort>ID</th><th data-sort>Descripción</th><th data-sort>Ubicación</th><th data-sort>Severidad</th><th data-sort>Carriles</th><th data-sort>Estado</th><th data-sort>Escenario asociado</th><th data-sort>Tiempo desde registro</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="body-incidentes"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <button id="prev-inc" class="btn btn-secondary">← Anterior</button>
+          <span id="page-info-inc"></span>
+          <button id="next-inc" class="btn btn-secondary">Siguiente →</button>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <h3>Priorización operativa</h3>
+        <div id="priorizacion"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="modal-incidente" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3>Registrar incidente</h3>
+      <div class="field"><label>Ubicación</label><select id="i-ubicacion"></select></div>
+      <div class="field"><label>Referencia libre</label><input id="i-ref" /></div>
+      <div class="field"><label>Tipo evento</label><select id="i-tipo"><option>Accidente</option><option>Obra imprevista</option><option>Falla semafórica</option><option>Derrumbe</option><option>Evento masivo</option><option>Otro</option></select></div>
+      <div class="field"><label>Severidad</label><label><input type="radio" name="sev" value="Alta" checked/> Alta 🔴</label> <label><input type="radio" name="sev" value="Media"/> Media 🟠</label> <label><input type="radio" name="sev" value="Baja"/> Baja 🟡</label></div>
+      <div class="field"><label>Carriles afectados</label><input id="i-carriles" type="number" min="1" value="1" /></div>
+      <div class="field"><label>Dirección</label><label><input type="checkbox"/> Norte</label> <label><input type="checkbox"/> Sur</label> <label><input type="checkbox"/> Este</label> <label><input type="checkbox"/> Oeste</label></div>
+      <div class="field"><label>Descripción</label><textarea id="i-desc" maxlength="200"></textarea><div class="kpi-sub"><span id="count-i">0</span>/200</div></div>
+      <div class="field"><label>Fuente del reporte</label><label><input type="radio" name="src" checked/> Sensor automático</label> <label><input type="radio" name="src"/> Operador vial</label> <label><input type="radio" name="src"/> Ciudadano</label> <label><input type="radio" name="src"/> Cámara CCTV</label></div>
+      <div id="i-geo-error" class="error-text"></div>
+      <button id="guardar-incidente" class="btn btn-primary">Registrar</button>
+    </div>
+  </div>
+
+  <aside id="drawer-incidente" class="drawer">
+    <button id="cerrar-drawer" class="btn btn-secondary">Cerrar</button>
+    <div id="drawer-body"></div>
+  </aside>
+
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/incidentes.js"></script>
+</body>
+</html>

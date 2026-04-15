@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Fuentes de Datos</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <section class="grid" style="grid-template-columns:3fr 2fr; gap:12px;">
+        <div class="card">
+          <h3>Estado de confianza</h3>
+          <div id="confianza-header"></div>
+          <div class="kpi-sub" id="confianza-ts">Calculado hace 0s</div>
+        </div>
+        <div class="card">
+          <h3>Calculadora de confianza</h3>
+          <div id="confianza-pasos"></div>
+          <label style="margin-top:10px"><input id="fallback-toggle" type="checkbox" /> Activar fallback a datos históricos</label>
+          <div id="fallback-banner"></div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px">
+          <h3>Fuentes</h3>
+          <input id="buscar-fuentes" placeholder="Buscar fuente por ID, nombre o tipo" style="max-width:320px" />
+        </div>
+        <div class="table-wrap">
+          <table id="tabla-fuentes">
+            <thead>
+              <tr>
+                <th data-sort>ID</th><th data-sort>Nombre</th><th data-sort>Tipo</th><th data-sort>Estado</th><th data-sort>Frescura</th><th data-sort>Completitud</th><th data-sort>Última actualización</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="body-fuentes"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <details open>
+          <summary>Log de registros inválidos</summary>
+          <input id="buscar-invalidos" placeholder="Buscar en logs inválidos" style="max-width:320px; margin:8px 0" />
+          <div class="table-wrap">
+            <table id="tabla-invalidos">
+              <thead><tr><th data-sort>Timestamp</th><th data-sort>Fuente</th><th data-sort>Razón</th><th data-sort>Campos afectados</th></tr></thead>
+              <tbody id="body-invalidos"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button id="prev-inv" class="btn btn-secondary">← Anterior</button>
+            <span id="page-info-inv"></span>
+            <button id="next-inv" class="btn btn-secondary">Siguiente →</button>
+          </div>
+        </details>
+      </section>
+    </div>
+  </div>
+
+  <div id="modal-fuente" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3>Configurar fuente</h3>
+      <div class="grid grid-2">
+        <div class="field"><label>Nombre</label><input id="cfg-nombre" /></div>
+        <div class="field"><label>Tipo</label><select id="cfg-tipo"><option>IoT Sensor</option><option>Cámara</option><option>GPS</option><option>API REST</option></select></div>
+      </div>
+      <div class="field"><label>Endpoint URL</label><input id="cfg-endpoint" placeholder="https://api.ejemplo.com/fuente" /></div>
+      <div class="field"><label>Heartbeat (5-300s)</label><input id="cfg-heartbeat" type="range" min="5" max="300" value="60" /></div>
+      <div class="field"><label>Fuente de fallback</label><select id="cfg-fallback"><option>SRC-01</option><option>SRC-02</option><option>SRC-03</option></select></div>
+      <label><input id="cfg-critica" type="checkbox" /> Fuente crítica</label>
+      <div style="margin-top:10px; display:flex; gap:8px">
+        <button id="probar-conexion" class="btn btn-secondary">Probar conexión</button>
+        <button id="guardar-fuente" class="btn btn-primary">Guardar</button>
+      </div>
+      <div class="progress-wrap" style="margin-top:8px"><div id="test-progress" class="progress-bar"></div></div>
+      <div id="test-result" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/fuentes-datos.js"></script>
+</body>
+</html>

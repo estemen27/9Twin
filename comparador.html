@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Comparador</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <section class="card">
+        <h3>Selecciona baseline + hasta 3 escenarios completados</h3>
+        <div class="grid grid-4">
+          <div class="field"><label>Baseline</label><input value="ESC-BASELINE" disabled /></div>
+          <div class="field"><label>Escenario 1</label><select id="esc1"></select></div>
+          <div class="field"><label>Escenario 2</label><select id="esc2"></select></div>
+          <div class="field"><label>Escenario 3</label><select id="esc3"></select></div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <div class="table-wrap">
+          <table id="tabla-comp">
+            <thead><tr><th>Métrica</th><th>Baseline</th><th id="h1">ESC-001 🟢</th><th id="h2">ESC-002 🟡</th><th id="h3">ESC-003 ⟳</th></tr></thead>
+            <tbody id="body-comp"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <h3>Motor de recomendación</h3>
+        <div id="recomendacion"></div>
+      </section>
+
+      <section class="card chart-box" style="margin-top:12px">
+        <canvas id="radar"></canvas>
+      </section>
+
+      <button id="aprobar-exportar" class="btn btn-primary" style="margin-top:12px">Aprobar recomendado y exportar plan</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/comparador.js"></script>
+</body>
+</html>

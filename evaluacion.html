@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Evaluación</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <section class="card">
+        <div class="tabs" id="tabs-eval">
+          <button class="tab active" data-e="Todos">Todos</button>
+          <button class="tab" data-e="Pendiente evaluación">Pendiente evaluación</button>
+          <button class="tab" data-e="Evaluado">Evaluado</button>
+          <button class="tab" data-e="Condiciones no controladas">Condiciones no controladas</button>
+        </div>
+        <div id="lista-planes" style="margin-top:10px"></div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <h3 id="titulo-eval">Panel de evaluación</h3>
+        <div id="sin-datos" class="banner banner-info" style="display:none">ℹ Información insuficiente. Los datos observados estarán disponibles 1 hora después de la implementación. No se generan resultados artificiales.</div>
+        <div id="tabla-eval-wrap" class="table-wrap">
+          <table id="tabla-eval">
+            <thead><tr><th>KPI</th><th>Predicción</th><th>Observado</th><th>Error absoluto</th><th>% error</th><th>Estado</th></tr></thead>
+            <tbody id="body-eval"></tbody>
+          </table>
+        </div>
+        <div id="alerta-eval"></div>
+        <div id="externas"></div>
+      </section>
+
+      <section class="grid grid-2" style="margin-top:12px">
+        <div class="card chart-box"><canvas id="line-eval"></canvas></div>
+        <div class="card chart-box"><canvas id="bar-eval"></canvas></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/evaluacion.js"></script>
+</body>
+</html>

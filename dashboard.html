@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Dashboard</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <div id="dashboard-skeleton" class="grid grid-4">
+        <div class="skeleton" style="height:86px"></div>
+        <div class="skeleton" style="height:86px"></div>
+        <div class="skeleton" style="height:86px"></div>
+        <div class="skeleton" style="height:86px"></div>
+      </div>
+
+      <div id="dashboard-real" style="display:none">
+        <section class="grid grid-4" id="kpi-grid"></section>
+
+        <section class="card" style="margin-top:12px">
+          <h3 class="section-title">Filtro temporal</h3>
+          <div class="tabs" id="tabs-tiempo">
+            <button class="tab" data-filtro="manana">Hora pico mañana (6-9h)</button>
+            <button class="tab" data-filtro="tarde">Hora pico tarde (17-20h)</button>
+            <button class="tab active" data-filtro="tiempo-real">Tiempo real</button>
+            <button class="tab" data-filtro="personalizado">Personalizado</button>
+          </div>
+        </section>
+
+        <section class="grid" style="grid-template-columns: 3fr 2fr; margin-top:12px;">
+          <div class="card">
+            <h3 class="section-title">Mapa operativo de la zona piloto</h3>
+            <div style="display:flex; gap:8px; margin-bottom:8px">
+              <button class="btn btn-secondary" id="zoom-in">+</button>
+              <button class="btn btn-secondary" id="zoom-out">-</button>
+              <label><input type="checkbox" id="toggle-nodos" checked /> Nodos</label>
+              <label><input type="checkbox" id="toggle-segmentos" checked /> Segmentos</label>
+              <label><input type="checkbox" id="toggle-poligono" checked /> Polígono</label>
+              <label><input type="checkbox" id="toggle-semaforos" checked /> Semáforos</label>
+            </div>
+            <div id="svg-wrap" style="overflow:auto; border:1px solid var(--border); border-radius:8px">
+              <svg id="map-svg" viewBox="0 0 700 460" style="width:100%; min-height:350px; background:#111a2d"></svg>
+            </div>
+            <div class="grid grid-4" style="margin-top:8px; gap:8px">
+              <div class="badge badge-green">● &lt; 0.40</div>
+              <div class="badge badge-amber">● 0.40 - 0.70</div>
+              <div class="badge badge-blue">● 0.70 - 0.90</div>
+              <div class="badge badge-red">● &gt; 0.90</div>
+            </div>
+            <div id="seg-popover" class="card" style="display:none; margin-top:8px"></div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title">Top 5 cuellos de botella</h3>
+            <div id="bottlenecks"></div>
+          </div>
+        </section>
+
+        <section class="grid grid-2" style="margin-top:12px">
+          <div class="card chart-box"><canvas id="chart-flujo"></canvas></div>
+          <div class="card chart-box"><canvas id="chart-viaje"></canvas></div>
+        </section>
+
+        <section id="dashboard-empty" class="card" style="display:none; margin-top:12px">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="38" height="38" fill="#A89880"><path d="M3 3h18v2H3V3zm0 6h18v2H3V9zm0 6h12v2H3v-2z"/></svg>
+            <p>Sin datos para el período seleccionado. Ajusta el filtro temporal para visualizar KPIs y gráficas.</p>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:12px">
+          <div id="refresh-text">Actualizado hace 0s — próxima actualización en 30s</div>
+          <div class="progress-wrap" style="margin-top:6px"><div id="refresh-progress" class="progress-bar"></div></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/map-engine.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/dashboard.js"></script>
+</body>
+</html>

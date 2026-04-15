@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Auditoría</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <section id="denegado" class="card" style="display:none">
+        <h2>🔒 Acceso denegado</h2>
+        <p>No tienes permisos para ver este módulo.</p>
+      </section>
+
+      <section id="auditoria-content" style="display:none">
+        <section class="card">
+          <h3 id="total-reg">247 registros de auditoría</h3>
+          <div class="grid grid-3">
+            <div class="field"><label>Fecha inicio</label><input id="f-inicio-a" type="date" /></div>
+            <div class="field"><label>Fecha fin</label><input id="f-fin-a" type="date" /></div>
+            <div class="field"><label>Usuario</label><select id="f-user-a"><option value="">Todos</option></select></div>
+          </div>
+          <div class="grid grid-3">
+            <div class="field">
+              <label>Tipo de acción</label>
+              <div id="f-acciones-a" class="checks-wrap">
+                <label><input type="checkbox" value="Login" /> Login</label>
+                <label><input type="checkbox" value="Logout" /> Logout</label>
+                <label><input type="checkbox" value="Crear escenario" /> Crear escenario</label>
+                <label><input type="checkbox" value="Editar escenario" /> Editar escenario</label>
+                <label><input type="checkbox" value="Ejecutar simulación" /> Ejecutar simulación</label>
+                <label><input type="checkbox" value="Aprobar" /> Aprobar</label>
+                <label><input type="checkbox" value="Rechazar" /> Rechazar</label>
+                <label><input type="checkbox" value="Exportar" /> Exportar</label>
+                <label><input type="checkbox" value="Cambio de rol" /> Cambio de rol</label>
+                <label><input type="checkbox" value="Intento bloqueado" /> Intento bloqueado</label>
+              </div>
+            </div>
+            <div class="field"><label>Entidad</label><select id="f-entidad-a"><option value="">Todas</option><option>Usuario</option><option>Escenario</option><option>Simulación</option><option>Reporte</option><option>Incidente</option></select></div>
+            <div class="field"><label>Resultado</label><select id="f-res-a"><option value="">Todos</option><option>EXITOSO</option><option>BLOQUEADO</option><option>ERROR</option></select></div>
+          </div>
+          <div class="field"><label>Búsqueda rápida</label><input id="f-q-a" placeholder="Buscar por usuario, entidad o ID" /></div>
+          <div style="display:flex; gap:8px">
+            <button id="aplicar-f" class="btn btn-primary">Aplicar filtros</button>
+            <button id="limpiar-f" class="btn btn-secondary">Limpiar</button>
+            <button id="exportar-audit" class="btn btn-secondary">Exportar registros filtrados</button>
+          </div>
+          <div id="contador-a" class="kpi-sub" style="margin-top:6px"></div>
+        </section>
+
+        <section class="card" style="margin-top:12px">
+          <div class="table-wrap">
+            <table id="tabla-audit">
+              <thead>
+                <tr>
+                  <th data-sort>#</th><th data-sort>Timestamp</th><th data-sort>Usuario</th><th data-sort>Rol</th><th data-sort>Tipo de acción</th><th data-sort>Entidad</th><th data-sort>ID Entidad</th><th data-sort>Versión</th><th data-sort>Resultado</th><th>Detalles</th>
+                </tr>
+              </thead>
+              <tbody id="body-audit"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button id="prev-a" class="btn btn-secondary">← Anterior</button>
+            <span id="page-info-a"></span>
+            <button id="next-a" class="btn btn-secondary">Siguiente →</button>
+          </div>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <aside id="drawer-versiones" class="drawer">
+    <button id="cerrar-versiones" class="btn btn-secondary">Cerrar</button>
+    <h3>Historial de versiones</h3>
+    <div id="tree-versiones"></div>
+  </aside>
+
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/auditoria.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City 9Twin - Escenarios</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app-layout">
+    <div id="page-content" style="display:none; width:100%">
+      <div class="grid" style="grid-template-columns:2fr 3fr; gap:12px;">
+        <section class="card">
+          <div style="display:flex; gap:8px; margin-bottom:8px">
+            <input id="search-esc" placeholder="Buscar por nombre o ID" />
+            <button id="nuevo-escenario" class="btn btn-primary">Nuevo escenario</button>
+          </div>
+          <div class="tabs" id="tabs-estados">
+            <button class="tab active" data-estado="Todos">Todos</button>
+            <button class="tab" data-estado="Borrador">Borrador</button>
+            <button class="tab" data-estado="En simulación">En simulación</button>
+            <button class="tab" data-estado="Completado">Completado</button>
+            <button class="tab" data-estado="Aprobado">Aprobado</button>
+            <button class="tab" data-estado="Rechazado">Rechazado</button>
+            <button class="tab" data-estado="Error">Error</button>
+          </div>
+          <div id="lista-escenarios" style="margin-top:12px"></div>
+        </section>
+
+        <section class="card">
+          <h3 id="detalle-titulo">Detalle de escenario</h3>
+          <div id="conflicto-banner"></div>
+          <div class="field"><label>Nombre del escenario</label><input id="f-nombre" /><div id="err-nombre" class="error-text"></div></div>
+          <div class="field"><label>Tramo vial / Intersección</label><select id="f-tramo"></select><div id="err-tramo" class="error-text"></div></div>
+
+          <div id="form-cierre">
+            <div class="field"><label>Tipo de cierre</label><label><input type="radio" name="tipo-cierre" value="Total" checked/> Total</label> <label><input type="radio" name="tipo-cierre" value="Parcial"/> Parcial</label></div>
+            <div class="field"><label>Carriles afectados</label><input id="f-carriles" type="number" min="1" /><div id="err-carriles" class="error-text"></div></div>
+            <div class="grid grid-2">
+              <div class="field"><label>Inicio</label><input id="f-inicio" type="datetime-local" /></div>
+              <div class="field"><label>Fin</label><input id="f-fin" type="datetime-local" /><div id="err-fechas" class="error-text"></div></div>
+            </div>
+            <div class="kpi-sub" id="duracion">Duración: 0h</div>
+            <div class="field"><label>Desvío propuesto</label><select id="f-desvio"><option>Sin desvío</option><option>Ruta Alterna Norte</option><option>Ruta Alterna Sur</option></select></div>
+            <div class="field"><label>Motivo del cierre</label><textarea id="f-motivo" maxlength="500"></textarea><div class="kpi-sub"><span id="count-motivo">0</span>/500</div></div>
+            <div class="field"><label>Eventos externos</label><label><input type="checkbox" value="Obra civil"/> Obra civil</label> <label><input type="checkbox" value="Evento masivo"/> Evento masivo</label> <label><input type="checkbox" value="Mantenimiento"/> Mantenimiento</label> <label><input type="checkbox" value="Emergencia"/> Emergencia</label></div>
+          </div>
+
+          <div id="form-semaforo" style="display:none">
+            <div class="field"><label>Ciclo total (30-180s)</label><input id="f-ciclo" type="range" min="30" max="180" value="120" /><input id="f-ciclo-num" type="number" min="30" max="180" value="120" /></div>
+            <div class="field"><label>Offset (0-60s)</label><input id="f-offset" type="range" min="0" max="60" value="15" /></div>
+            <div class="field"><label>Justificación</label><textarea id="f-just" maxlength="500"></textarea></div>
+            <div class="card">
+              <strong>Fases</strong>
+              <table>
+                <thead><tr><th>Fase</th><th>Dirección</th><th>Verde(s)</th><th>Ámbar(s)</th><th>Rojo(s)</th></tr></thead>
+                <tbody>
+                  <tr><td>F1</td><td>N-S</td><td><input class="fase-verde" type="number" value="45" /></td><td><input type="number" value="3" /></td><td><input type="number" value="72" /></td></tr>
+                  <tr><td>F2</td><td>E-O</td><td><input class="fase-verde" type="number" value="42" /></td><td><input type="number" value="3" /></td><td><input type="number" value="75" /></td></tr>
+                </tbody>
+              </table>
+              <div id="sum-verdes" class="error-text"></div>
+            </div>
+          </div>
+
+          <div id="connectivity"></div>
+          <div style="display:flex; gap:8px; margin-top:12px">
+            <button id="guardar-borrador" class="btn btn-secondary">Guardar borrador</button>
+            <button id="guardar-simular" class="btn btn-primary">Guardar y simular</button>
+          </div>
+
+          <section class="card" style="margin-top:12px">
+            <h4>Resultado de simulación</h4>
+            <div class="exec-live-panel">
+              <div class="exec-metrics">
+                <div class="exec-chip"><span>Escenario activo</span><strong id="exec-escenario">Sin seleccionar</strong></div>
+                <div class="exec-chip"><span>Ultima actualizacion</span><strong id="exec-updated">--:--:--</strong></div>
+                <div class="exec-chip"><span>Estado del motor</span><strong id="exec-engine">En espera</strong></div>
+                <div class="exec-chip"><span>Confianza</span><strong id="exec-confidence"><span class="badge badge-gray">Sin ejecutar</span></strong></div>
+              </div>
+              <div class="exec-feed-wrap">
+                <strong>Feed operativo en vivo</strong>
+                <ul id="exec-feed" class="exec-feed-list"></ul>
+              </div>
+            </div>
+            <div id="resultado-sim" class="empty-state">Aún no hay simulaciones en esta vista.</div>
+            <div id="sim-shell" class="sim-shell" style="display:none; margin-top:10px;">
+              <div class="sim-toolbar">
+                <label>Hora de analisis
+                  <input id="sim-hour" type="range" min="0" max="23" value="8" />
+                </label>
+                <span id="sim-hour-label" class="badge badge-blue">08:00</span>
+                <button id="sim-play" class="btn btn-secondary" type="button">Reproducir 24h</button>
+                <select id="sim-map-mode">
+                  <option value="escenario">Mapa escenario</option>
+                  <option value="baseline">Mapa baseline</option>
+                  <option value="delta">Mapa delta</option>
+                </select>
+              </div>
+              <div id="sim-kpis" class="sim-kpi-grid"></div>
+              <div class="grid" style="grid-template-columns:1.35fr 1fr; margin-top:10px; gap:10px;">
+                <div class="card sim-chart-wrap">
+                  <h4 style="margin-bottom:6px">Comparativo 24h: tiempo de viaje (min)</h4>
+                  <canvas id="esc-sim-chart" height="220"></canvas>
+                </div>
+                <div class="card sim-map-wrap">
+                  <h4 style="margin-bottom:6px">Impacto espacial del escenario</h4>
+                  <svg id="esc-map-diff" viewBox="0 0 700 460" aria-label="Mapa de impacto"></svg>
+                  <div id="sim-map-info" class="kpi-sub" style="margin-top:8px">Tip: haz clic en un segmento o nodo para ver detalle operativo.</div>
+                  <div class="kpi-sub" style="margin-top:8px">Rojo: mayor saturación. Azul/verde: mejora operacional.</div>
+                </div>
+              </div>
+              <div id="sim-insights" class="card" style="margin-top:10px"></div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-nuevo" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3>Nuevo escenario</h3>
+      <div class="grid grid-3">
+        <button class="btn btn-secondary" data-tipo="Cierre Vial">🚧 Cierre Vial</button>
+        <button class="btn btn-secondary" data-tipo="Ajuste Semaforización">🚦 Ajuste Semaforización</button>
+        <button class="btn btn-secondary" data-tipo="Incidente" id="btn-inc">⚠ Incidente</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-sim" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3>Simulación en progreso</h3>
+      <div id="sim-steps">
+        <p>○ Validando parámetros</p>
+        <p>○ Cargando red vial (847 nodos)</p>
+        <p>○ Ejecutando modelo...</p>
+        <p>○ Calculando KPIs</p>
+        <p>○ Generando reporte</p>
+      </div>
+      <div class="progress-wrap"><div id="sim-progress" class="progress-bar"></div></div>
+      <button id="cancelar-sim" class="btn btn-danger" style="margin-top:10px">Cancelar</button>
+      <p id="sim-sla" class="kpi-sub"></p>
+    </div>
+  </div>
+
+  <div id="modal-exportar" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h3>Exportar reporte</h3>
+      <div id="preview-export" class="print-only"></div>
+      <label>Formato</label>
+      <select id="export-format"><option>PDF</option><option>CSV</option><option>Ambos</option></select>
+      <div class="progress-wrap" style="margin-top:8px"><div id="export-progress" class="progress-bar"></div></div>
+      <div class="modal-actions"><button id="run-export" class="btn btn-primary">Generar</button></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app-state.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/map-engine.js"></script>
+  <script src="js/sidebar-template.js"></script>
+  <script src="pages/escenarios.js"></script>
+</body>
+</html>
