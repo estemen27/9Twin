@@ -20,9 +20,10 @@
 
   function colorByCongestion(c) {
     const v = Math.min(1, Math.max(0, c));
-    if (v < 0.5) return mixColor("#2DD4BF", "#4ADE80", v / 0.5);
-    if (v < 0.75) return mixColor("#4ADE80", "#38BDF8", (v - 0.5) / 0.25);
-    return mixColor("#38BDF8", "#F87171", (v - 0.75) / 0.25);
+    if (v < 0.4) return mixColor("#57C785", "#8CD9A8", v / 0.4);
+    if (v < 0.7) return mixColor("#8CD9A8", "#D8B562", (v - 0.4) / 0.3);
+    if (v < 0.9) return mixColor("#D8B562", "#6EA8D8", (v - 0.7) / 0.2);
+    return mixColor("#6EA8D8", "#D46868", (v - 0.9) / 0.1);
   }
 
   function createSvgEl(tag, attrs) {
@@ -153,7 +154,7 @@
         y1: s.from[1],
         x2: s.to[0],
         y2: s.to[1],
-        stroke: "rgba(191,219,254,0.9)",
+        stroke: "rgba(191,219,254,0.65)",
         "stroke-width": 1.8,
         "stroke-dasharray": "8 10",
         class: "flow-line",
@@ -345,12 +346,12 @@
         if (!el) return;
         const v = Math.min(1, Math.max(0, value));
         el.setAttribute("stroke", colorByCongestion(v));
-        el.setAttribute("stroke-width", String((ref?.baseCritical ? 5.2 : 4.0) + v * 2.2));
-        el.style.opacity = String(0.62 + v * 0.38);
+        el.setAttribute("stroke-width", String((ref?.baseCritical ? 4.8 : 3.5) + v * 1.6));
+        el.style.opacity = String(0.5 + v * 0.35);
         if (flow) {
           flow.style.animationDuration = (0.9 + Math.max(0.2, (1 - v)) * 1.3).toFixed(2) + "s";
-          flow.style.opacity = String(0.3 + Math.min(0.6, v));
-          flow.style.strokeWidth = String(1.2 + v * 1.3);
+          flow.style.opacity = String(0.24 + Math.min(0.42, v * 0.48));
+          flow.style.strokeWidth = String(1 + v * 0.95);
         }
       },
       getScale: function getScale() { return scale; },

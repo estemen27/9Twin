@@ -162,13 +162,13 @@
 
   function updateMapByFilter(filtro) {
     const base = window.AppData?.mapaChia?.segmentos || [];
-    let factor = 1;
-    if (filtro === "manana") factor = 1.08;
-    if (filtro === "tarde") factor = 1.16;
-    if (filtro === "tiempo-real") factor = 1;
+    let delta = 0;
+    if (filtro === "manana") delta = 0.03;
+    if (filtro === "tarde") delta = 0.07;
+    if (filtro === "tiempo-real") delta = 0;
 
     base.forEach(function (s) {
-      const v = Math.min(0.97, Math.max(0.2, s.congestion * factor));
+      const v = Math.min(0.96, Math.max(0.25, s.congestion + delta));
       mapApi?.setCongestion(s.id, v);
     });
   }
