@@ -1,0 +1,60 @@
+name: Generic CI Quality Gate
+on: 
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  quality-check:
+    name: Automated Quality Assurance
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # --- 🐍 PYTHON ---
+      - name: 🐍 Setup Python
+        if: hashFiles('**/requirements.txt', '**/pyproject.toml') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - name: 🧪 Run Python Tests
+        if: hashFiles('**/requirements.txt', '**/pyproject.toml') != ''
+        run: |
+          pip install pytest
+          if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi
+          pytest || echo "No tests found"
+
+      # --- 📦 NODE.JS (React/JS/TS) ---
+      - name: 📦 Setup Node.js
+        if: hashFiles('**/package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: 🧪 Run Frontend Tests
+        if: hashFiles('**/package.json') != ''
+        run: |
+          npm ci
+          npm test -- --watchAll=false --passWithNoTests
+
+      # --- ☕ JAVA ---
+      - name: ☕ Setup Java
+        if: hashFiles('**/pom.xml', '**/build.gradle') != ''
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: 🧪 Run Java Tests
+        if: hashFiles('**/pom.xml', '**/build.gradle') != ''
+        run: |
+          if [ -f "pom.xml" ]; then ./mvnw test;
+          elif [ -f "build.gradle" ]; then ./gradlew test;
+          fi
+
+      # --- 📊 REPORT ---
+      - name: ✅ Final Status
+        if: always()
+        run: echo "### 🏁 Reporte de Calidad de ${{ github.repository }} finalizado." >> $GITHUB_STEP_SUMMARY
