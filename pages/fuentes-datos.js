@@ -117,18 +117,36 @@
   });
 
   document.getElementById("probar-conexion")?.addEventListener("click", function () {
-    const bar = document.getElementById("test-progress");
-    const out = document.getElementById("test-result");
-    bar.style.width = "0%";
-    out.textContent = "";
-    setTimeout(function () { bar.style.width = "40%"; }, 300);
-    setTimeout(function () { bar.style.width = "80%"; }, 900);
-    setTimeout(function () {
-      bar.style.width = "100%";
-      const ok = Math.random() > 0.25;
-      out.innerHTML = ok ? '<div class="banner banner-success">✓ Respuesta: 34ms</div>' : '<div class="banner banner-error">✗ Sin respuesta (timeout)</div>';
-    }, 1500);
+  const bar = document.getElementById("test-progress");
+  const out = document.getElementById("test-result");
+
+  bar.style.width = "20%";
+  out.innerHTML = '<div class="banner banner-info">Probando fuentes externas simuladas...</div>';
+
+  window.IntegrationService.syncSources(fuentes).then(function (results) {
+    bar.style.width = "100%";
+
+    const activos = results.filter(function (r) {
+      return r.estado === "activo";
+    }).length;
+
+    out.innerHTML =
+      '<div class="banner banner-success">✓ Prueba finalizada: ' +
+      activos +
+      " de " +
+      results.length +
+      " fuentes activas o disponibles.</div>";
+
+    window.saveAppData?.();
+    renderTable();
+    renderConfianza();
+
+    window.registrarAuditoria?.("Prueba integración", "Fuente", "ALL", "EXITOSO", {
+      total: results.length,
+      activas: activos,
+    });
   });
+});
 
   document.getElementById("guardar-fuente")?.addEventListener("click", function () {
     if (!selected) return;
