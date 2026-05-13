@@ -250,4 +250,6 @@ Usuarios definidos en `js/data.js`:
 - `observador@city9twin.com` / `Obs123`
 - `auditor@city9twin.com` / `Audit123`
 
+## Evidencia corte 13 de mayo
 
+Para el corte del 13 de mayo se cerró el POC funcional estático. El alcance MVP queda documentado en `docs/alcance-mvp.md`, con simulación local, fuentes simuladas, QA manual y pruebas unitarias básicas.
