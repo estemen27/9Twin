@@ -203,55 +203,35 @@
   }
 
   function estimateSimulation() {
-    const baseline = getBaselineKpi();
-    const isSem = document.getElementById("form-cierre").style.display === "none";
-    const desvio = document.getElementById("f-desvio")?.value || "Sin desvío";
-    const carriles = Number(document.getElementById("f-carriles")?.value || "1");
-    const ciclo = Number(document.getElementById("f-ciclo-num")?.value || "120");
-    const iniRaw = document.getElementById("f-inicio")?.value;
-    const finRaw = document.getElementById("f-fin")?.value;
-    const ini = iniRaw ? new Date(iniRaw) : null;
-    const fin = finRaw ? new Date(finRaw) : null;
-    const durHours = ini && fin && fin > ini ? Math.max(1, (fin - ini) / 3600000) : 3;
+  const isSem = document.getElementById("form-cierre").style.display === "none";
+  const iniRaw = document.getElementById("f-inicio")?.value;
+  const finRaw = document.getElementById("f-fin")?.value;
+  const ini = iniRaw ? new Date(iniRaw) : null;
+  const fin = finRaw ? new Date(finRaw) : null;
 
-    let deltaCong = 0;
-    if (isSem) {
-      const semFactor = clamp((120 - ciclo) / 120, -0.4, 0.35);
-      deltaCong += -0.08 * semFactor;
-    } else {
-      const lanePenalty = carriles * 0.042;
-      const durationPenalty = durHours > 6 ? 0.032 : durHours > 3 ? 0.018 : 0.008;
-      const desvioBonus = desvio !== "Sin desvío" ? -0.07 : 0.028;
-      deltaCong += lanePenalty + durationPenalty + desvioBonus;
-    }
+  const durHours = ini && fin && fin > ini ? Math.max(1, (fin - ini) / 3600000) : 3;
 
-    deltaCong += (Math.random() - 0.5) * 0.018;
+  const sim = window.SimulationCore.estimateScenario(
+    {
+      tipo: isSem ? "Ajuste Semaforización" : "Cierre Vial",
+      desvio: document.getElementById("f-desvio")?.value || "Sin desvío",
+      carriles: document.getElementById("f-carriles")?.value || "1",
+      ciclo: document.getElementById("f-ciclo-num")?.value || "120",
+      duracionHoras: durHours,
+      tramo: document.getElementById("f-tramo")?.value || "",
+      baseline: getBaselineKpi(),
+    },
+    window.AppData?.mapaChia?.segmentos || []
+  );
 
-    const congestion = clamp(round(baseline.congestion + deltaCong, 2), 0.42, 0.98);
-    const tiempo = clamp(round(baseline.tiempo + deltaCong * 20, 1), 16.0, 39.0);
-    const p90 = clamp(round(baseline.p90 + deltaCong * 29, 1), 25.0, 56.0);
-    const velocidad = clamp(round(baseline.velocidad - deltaCong * 23, 1), 12.0, 36.0);
-
-    const quality = Math.abs(deltaCong);
-    const confianza = quality < 0.045 ? "VERDE" : quality < 0.095 ? "AMARILLO" : "ROJO";
-
-    const tramo = document.getElementById("f-tramo")?.value || "";
-    const tramoKey = tramo.split("/")[0].trim().toLowerCase();
-    const impactBySegment = {};
-    (window.AppData?.mapaChia?.segmentos || []).forEach(function (seg) {
-      const local = seg.nombre.toLowerCase().includes(tramoKey) ? 1.2 : 0.45;
-      const segDelta = deltaCong * local + (Math.random() - 0.5) * 0.012;
-      impactBySegment[seg.id] = clamp(round(seg.congestion + segDelta, 2), 0.35, 0.99);
-    });
-
-    return {
-      baseline: baseline,
-      kpi: { tiempo: tiempo, p90: p90, congestion: congestion, velocidad: velocidad },
-      confianza: confianza,
-      series: buildSeries({ tiempo: tiempo, p90: p90, congestion: congestion, velocidad: velocidad }),
-      impactBySegment: impactBySegment,
-    };
-  }
+  return {
+    baseline: sim.baseline,
+    kpi: sim.kpi,
+    confianza: sim.confianza,
+    series: buildSeries(sim.kpi),
+    impactBySegment: sim.impactBySegment,
+  };
+}
 
   function estadoBadge(s) {
     const map = {
