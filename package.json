@@ -1,0 +1,12 @@
+{
+  "name": "city9twin-poc",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run-tests.cjs",
+    "check": "node scripts/check-syntax.cjs",
+    "qa": "npm run check && npm test",
+    "load": "node scripts/load-static.cjs"
+  },
+  "devDependencies": {}
+}
